@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - A Pen by  Vasily Kuzminuh</title>
+  <style>
+    body{
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+
+</head>
+<body>
+  <script type="text/javascript" language="JavaScript1.5" src="https://rawgit.com/Vasilui/habrahabr/master/WebGL_Three.js/libs/three.js"></script>
+  <script type="text/javascript" language="JavaScript1.5" src="https://rawgit.com/Vasilui/habrahabr/master/WebGL_Three.js/libs/AsciiEffect.js"></script>
+  <script type="text/javascript" language="JavaScript1.5" src="https://rawgit.com/Vasilui/habrahabr/master/WebGL_Three.js/libs/stats.js"></script>
+  <script type="text/javascript" language="JavaScript1.5" src="https://rawgit.com/Vasilui/habrahabr/master/WebGL_Three.js/libs/dat.gui.js"></script>
+  <div id="WebGL-output"></div>
+</body>
+<!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+  <script>
+  $(function () {
+
+          var stats = initStats();
+
+          // create a scene, that will hold all our elements such as objects, cameras and lights.
+          var scene = new THREE.Scene();
+
+          // create a camera, which defines where we're looking at.
+          var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+          // create a render and set the size
+          var renderer = new THREE.WebGLRenderer();
+
+          renderer.setClearColorHex(0xEEEEEE, 1.0);
+          renderer.setSize(window.innerWidth, window.innerHeight);
+          renderer.shadowMapEnabled = true;
+
+          // create the ground plane
+          var planeGeometry = new THREE.PlaneGeometry(90,70,1,1);
+          var planeMaterial =    new THREE.MeshLambertMaterial({color: 0xffffff});
+          var plane = new THREE.Mesh(planeGeometry,planeMaterial);
+          plane.receiveShadow  = true;
+
+          // rotate and position the plane
+          plane.rotation.x=-0.5*Math.PI;
+          plane.position.x=0;
+          plane.position.y=0;
+          plane.position.z=0;
+
+          // add the plane to the scene
+          scene.add(plane);
+
+          // create a cube
+          var cubeGeometry = new THREE.CubeGeometry(4,4,4);
+          var cubeMaterial = new THREE.MeshLambertMaterial({color: 0xff0000});
+          var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+          cube.castShadow = true;
+
+          // position the cube
+          cube.position.x=20;
+          cube.position.y=5;
+          cube.position.z=2;
+
+          // add the cube to the scene
+          scene.add(cube);
+
+          var sphereGeometry = new THREE.SphereGeometry(4,20,20);
+          var sphereMaterial = new THREE.MeshLambertMaterial({color: 0x7777ff});
+          var sphere = new THREE.Mesh(sphereGeometry,sphereMaterial);
+
+          // position the sphere
+          sphere.position.x=-5;
+          sphere.position.y=5;
+          sphere.position.z=-5;
+          sphere.castShadow=true;
+
+          // add the sphere to the scene
+          scene.add(sphere);
+//
+          var geometry = new THREE.TorusKnotGeometry( 4, 2, 50, 52);
+          var material = new THREE.MeshLambertMaterial( { color: 0x2bc2e7} );
+          var torusKnot = new THREE.Mesh( geometry, material );
+          torusKnot.castShadow = true;
+
+          torusKnot.position.x=-30;
+          torusKnot.position.y=5;
+          torusKnot.position.z=15;
+
+          scene.add( torusKnot );
+//
+          var geometry = new THREE.CircleGeometry( 5, 32 );
+          var material = new THREE.MeshBasicMaterial( { color: 0xcd29a0 } );
+          var circle = new THREE.Mesh( geometry, material );
+
+          circle.position.x=-10;
+          circle.position.y=30;
+          circle.position.z=15;
+          circle.castShadow = true;
+          scene.add( circle );
+//
+          var geometry = new THREE.OctahedronGeometry( 3, 1);
+          var material = new THREE.MeshLambertMaterial( { color: 0xffff00 } );
+          var Octahedron = new THREE.Mesh( geometry, material );
+
+          Octahedron.position.x=25;
+          Octahedron.position.y=5;
+          Octahedron.position.z=-20;
+          Octahedron.castShadow = true;
+          scene.add( Octahedron );
+//
+          var geometry = new THREE.RingGeometry( 4, 10, 20);
+          var material = new THREE.MeshBasicMaterial( { color: 0x1dec17 } );
+          var ring = new THREE.Mesh( geometry, material );
+
+          ring.position.x=15;
+          ring.position.y=5;
+          ring.position.z=2;
+          ring.castShadow = true;
+          scene.add( ring );
+
+//
+          var torusGeometry = new THREE.TorusGeometry(3,2,10,10);
+          var torusMaterial = new THREE.MeshLambertMaterial({color:0xaa77ff});
+          var torus = new THREE.Mesh(torusGeometry,torusMaterial);
+
+          torus.position.x=-10;
+          torus.position.y=6;
+          torus.position.z=15;
+          torus.castShadow=true;
+          scene.add(torus);
+//
+          var tetrahedronGeometry = new THREE.TetrahedronGeometry(5,0,5,5);
+          var tetrahedronMaterial = new THREE.MeshLambertMaterial({color:0xaa77ff})
+          var tetrahedron = new THREE.Mesh(tetrahedronGeometry,tetrahedronMaterial);
+          tetrahedron.position.x=-20;
+          tetrahedron.position.y=6;
+          tetrahedron.position.z=15;
+          tetrahedron.castShadow=true;
+
+          scene.add(tetrahedron);
+
+//
+          var cylinderGeometry = new THREE.CylinderGeometry(2,3,5,10);
+          var cylinderMaterial = new THREE.MeshLambertMaterial({color:0xaa77ff});
+          var cylinder = new THREE.Mesh(cylinderGeometry,cylinderMaterial);
+
+          cylinder.position.x=-30;
+          cylinder.position.y=6;
+          cylinder.position.z=15;
+          cylinder.castShadow=true;
+
+          scene.add(cylinder);
+//
+          // position and point the camera to the center of the scene
+          camera.position.x = 30;
+          camera.position.y = 90;
+          camera.position.z = 90;
+          camera.lookAt(scene.position);
+
+          // add subtle ambient lighting
+          var ambientLight = new THREE.AmbientLight(0x0c0c0c);
+          scene.add(ambientLight);
+
+          // add spotlight for the shadows
+          var spotLight = new THREE.SpotLight( 0xffffff );
+          spotLight.position.set( -60, 50, -60 );
+          spotLight.castShadow = true;
+          scene.add( spotLight );
+
+          // add the output of the renderer to the html element
+          $("#WebGL-output").append(renderer.domElement);
+
+          // call the render function
+          var step1=0;
+          var step2=0;
+          var step3=0;
+          var step4=0;
+          var step5=0;
+          var step6=0;
+
+
+
+          var controls = new function() {
+              this.MoveX = 0.01;
+              this.MoveY = 0.01;
+              this.MoveZ = 0.01;
+              this.RotateX = 0.01;
+              this.RotateY = 0.01;
+              this.RotateZ = 0.01;
+              this.JumpX = 0.01;
+              this.JumpY = 0.01;
+              this.JumpZ = 0.01;
+
+
+          }
+
+          var gui = new dat.GUI();
+          gui.add(controls, 'MoveX',-0.3,0.3);
+          gui.add(controls, 'MoveY',-0.3,0.3);
+          gui.add(controls, 'MoveZ',-0.3,0.3);
+          gui.add(controls, 'RotateX',-0.3,0.3);
+          gui.add(controls, 'RotateY',-0.3,0.3);
+          gui.add(controls, 'RotateZ',-0.3,0.3);
+          gui.add(controls, 'JumpX',-0.3,0.3);
+          gui.add(controls, 'JumpY',-0.3,0.3);
+          gui.add(controls, 'JumpZ',-0.3,0.3);
+
+
+          render();
+
+          function render() {
+              stats.update();
+              // rotate the cube around its axes
+              torus.rotation.x += controls.RotateX;
+              tetrahedron.rotation.y += controls.RotateY;
+              cylinder.rotation.z += controls.RotateZ;
+
+              // bounce the sphere up and down
+              step1+=controls.MoveX;
+              step2+=controls.MoveY;
+              step3+=controls.MoveZ;
+              step4+=controls.JumpX;
+              step5+=controls.JumpY;
+              step6+=controls.JumpZ;
+              cube.position.x = -20 +( 10*(Math.cos(step1)));
+              sphere.position.y = 7 +( 4*(Math.sin(step2)));
+              torusKnot.position.z = -20 +( 10*(Math.cos(step3)));
+//
+              circle.position.x = 20+( 10*(Math.cos(step4)));
+              circle.position.y = 2 +( 10*Math.abs(Math.sin(step4)));
+//
+
+              ring.position.y = 10 +( 9*Math.abs(Math.sin(step5)));
+//
+              Octahedron.position.z = 10 +( 10*(Math.cos(step6)));
+              Octahedron.position.y = 2 +( 10*Math.abs(Math.sin(step6)));
+              // render using requestAnimationFrame
+              requestAnimationFrame(render);
+              renderer.render(scene, camera);
+          }
+
+          function initStats() {
+
+              var stats = new Stats();
+
+              stats.setMode(0); // 0: fps, 1: ms
+
+              // Align top-left
+              stats.domElement.style.position = 'absolute';
+              stats.domElement.style.left = '0px';
+              stats.domElement.style.top = '0px';
+
+              $("#Stats-output").append( stats.domElement );
+
+              return stats;
+          }
+      });
+  </script>
+</html>
